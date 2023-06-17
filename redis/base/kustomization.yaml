@@ -3,8 +3,8 @@ kind: Kustomization
 namespace: tooling
 
 helmCharts:
-  - repo: https://charts.bitnami.com/bitnami
-    name: redis
+  - repo: https://github.com/bitnami/charts/tree/main/bitnami/redis
+    name: bitnami/redis
     releaseName: redis
     namespace: tooling
     valuesFile: values.yaml

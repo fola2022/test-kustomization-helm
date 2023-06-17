@@ -625,9 +625,12 @@ alertmanager:
     ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
     ##
     resources: {}
-    # requests:
-    #   memory: 400Mi
-
+      # requests:
+      #   memory: 128Mi
+      #   cpu: 100m
+      # limits:
+      #   memory: 256Mi
+      #   cpu: 200m
     ## Pod anti-affinity can prevent the scheduler from placing Prometheus replicas on the same node.
     ## The default value "soft" means that the scheduler should *prefer* to not schedule two replica pods onto the same node but no guarantee is provided.
     ## The value "hard" means that the scheduler is *required* to not schedule two replica pods onto the same node.
@@ -1854,7 +1857,7 @@ prometheus-node-exporter:
     pspEnabled: false
 
 ## Manages Prometheus and Alertmanager components
-##
+##internal
 prometheusOperator:
   enabled: true
 
@@ -2229,13 +2232,13 @@ prometheusOperator:
     enableProbe: false
 
     # resource config for prometheusConfigReloader
-    resources:
-      requests:
-        cpu: 200m
-        memory: 50Mi
-      limits:
-        cpu: 200m
-        memory: 50Mi
+    resources: {}
+      # requests:
+      #   cpu: 200m
+      #   memory: 50Mi
+      # limits:
+      #   cpu: 200m
+      #   memory: 50Mi
 
   ## Thanos side-car image when configured
   ##
@@ -3032,9 +3035,14 @@ prometheus:
 
     ## Resource limits & requests
     ##
-    resources: {}
-    # requests:
-    #   memory: 400Mi
+    resources: 
+      requests:
+        memory: 200Mi
+        cpu: 100m
+      limits:
+        memory: 2048Mi
+        cpu: 500m
+    
 
     ## Prometheus StorageSpec for persistent data
     ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/storage.md
@@ -3074,7 +3082,77 @@ prometheus:
     ## The scrape configuration example below will find master nodes, provided they have the name .*mst.*, relabel the
     ## port to 2379 and allow etcd scraping provided it is running on all Kubernetes master nodes
     ##
-    additionalScrapeConfigs: []
+    additionalScrapeConfigs: |
+
+      - job_name: "argocd-application-controller-metrics"
+        static_configs:
+          - targets: ["argocd-application-controller-metrics.argocd.svc.cluster.local:8082"]
+
+      - job_name: "argocd-applicationset-controller-metrics"
+        static_configs:
+          - targets: ["argocd-applicationset-controller-metrics.argocd.svc.cluster.local:8085"]
+
+      - job_name: "argocd-notifications-controller-metrics"
+        static_configs:
+          - targets: ["argocd-notifications-controller-metrics.argocd.svc.cluster.local:9001"]
+
+      - job_name: "argocd-redis-metrics"
+        static_configs:
+          - targets: ["argocd-redis-metrics.argocd.svc.cluster.local:9121"]
+
+      - job_name: "argocd-repo-server-metrics"
+        static_configs:
+          - targets: ["argocd-repo-server-metrics.argocd.svc.cluster.local:8084"]
+
+      - job_name: "argocd-server-metrics"
+        static_configs:
+          - targets: ["argocd-server-metrics.argocd.svc.cluster.local:8083"]
+
+      - job_name: "cert-manager"
+        static_configs:
+          - targets: ["cert-manager.cert-manager.svc.cluster.local:9402"]
+
+      - job_name: "cluster-autoscaler-aws-cluster-autoscaler"
+        static_configs:
+          - targets: ["cluster-autoscaler-aws-cluster-autoscaler.kube-system.svc.cluster.local:8085"]
+
+      - job_name: "externaldns"
+        static_configs:
+          - targets: ["external-dns.sharedtooling.svc.cluster.local:7979"]
+
+      - job_name: "gitlab-runner"
+        static_configs:
+          - targets: ["gitlab-runner.gitlab-runner.svc.cluster.local:9252"]
+
+      - job_name: "grafana"
+        static_configs:
+          - targets: ["grafana.sharedtooling.svc.cluster.local:3000"]
+      
+      - job_name: "kube-state-metrics"
+        static_configs:
+          - targets: ["kube-state-metrics.sharedtooling.svc.cluster.local:8080"]
+
+      - job_name: "nginx-ingress"
+        static_configs:
+          - targets: ["ingress-nginx-controller-metrics.ingress-nginx.svc.cluster.local:10254"]
+
+      - job_name: "node-exporter"
+        static_configs:
+          - targets: ["kube-prometheus-node-exporter.monitoring.svc.cluster.local:9100"]
+
+      - job_name: "postgresql"
+        static_configs:
+          - targets: ["postgresql-metrics.sharedtooling.svc.cluster.local:9187"]
+
+      - job_name: "redis"
+        static_configs:
+          - targets: ["redis-metrics.sharedtooling.svc.cluster.local:9121"]
+
+      - job_name: "vault"
+        static_configs:
+          - targets: ["vault.sharedtooling.svc.cluster.local:7979"]
+
+
     # - job_name: kube-etcd
     #   kubernetes_sd_configs:
     #     - role: node
