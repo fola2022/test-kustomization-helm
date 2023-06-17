@@ -9,6 +9,6 @@ spec:
     server: https://kubernetes.default.svc
   source:
     repoURL: https://github.com/fola2022/test-kustomization-helm.git
-    path: /home/folah/test/prometheus/overlays/dev
+    path: prometheus/overlays/dev
     plugin:
       name: kustomize-enable-helm
