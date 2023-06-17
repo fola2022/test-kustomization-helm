@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  namespace: argocd
+  name: prometheus
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+  source:
+    repoURL: https://github.com/fola2022/test-kustomization-helm.git
+    path: /home/folah/test/prometheus/overlays/dev
+    plugin:
+      name: kustomize-enable-helm
