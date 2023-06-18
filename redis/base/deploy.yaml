@@ -612,6 +612,7 @@ spec:
         name: config
       - emptyDir: {}
         name: redis-tmp-conf
+        
   updateStrategy:
     rollingUpdate: {}
     type: RollingUpdate
