@@ -4,7 +4,7 @@ namespace: tooling
 
 helmCharts:
   - repo:  https://charts.bitnami.com/bitnami
-    name: bitnami/redis
+    name: redis
     releaseName: redis
     namespace: tooling
     valuesFile: values.yaml
