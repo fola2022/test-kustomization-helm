@@ -2,13 +2,13 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   namespace: argocd
-  name: redis
+  name: apache
 spec:
   project: default
   destination:
     server: https://kubernetes.default.svc
   source:
     repoURL: https://github.com/fola2022/test-kustomization-helm.git
-    path: redis/overlays/dev
+    path: apache/overlays/dev
     plugin:
       name: kustomize-enable-helm

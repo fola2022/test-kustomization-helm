@@ -8,3 +8,4 @@ helmCharts:
     releaseName: prometheus-stack
     valuesFile: values.yaml
     version: 45.27.2
+    
